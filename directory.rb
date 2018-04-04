@@ -12,3 +12,6 @@ puts "The Joker"
 puts "Joffrey Baratheon"
 puts "Norman Bates"
 puts "Jean-Ralphio Saperstein"
+print "Overall, we have "
+print 12
+print " great students\n"
