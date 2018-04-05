@@ -20,7 +20,7 @@ def input_students
   # create an empty array
   students = []
   # get the first name
-  name = gets.chomp
+  name = gets.gsub(/\s+\z/, "")
   puts "Please enter #{name}'s cohort"
   cohort = gets.chomp
   # while the name is not empty, repeat this code
