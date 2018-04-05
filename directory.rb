@@ -20,8 +20,8 @@ end
 
 # prints the school header
 def print_header
-  puts "The students of Villains Academy"
-  puts "--------------------------------"
+  puts "The students of Villains Academy".center(50)
+  puts "--------------------------------".center(50)
 end
 
 # prints a list of students
@@ -29,10 +29,10 @@ def print(students)
   student_index = 0
   while student_index < students.count do
     if students[student_index][:name][0].downcase == "r" && students[student_index][:name].length < 12
-      puts "#{student_index + 1}. #{students[student_index][:name]} (#{students[student_index][:cohort]} cohort)"
-      puts "\thobby: #{students[student_index][:hobby]}"
-      puts "\tcountry of birth: #{students[student_index][:country_of_birth]}"
-      puts "\theight: #{students[student_index][:height]} cm"
+      puts "#{student_index + 1}. #{students[student_index][:name]} (#{students[student_index][:cohort].capitalize} cohort)".center(50)
+      puts "\thobby: #{students[student_index][:hobby]}".center(50)
+      puts "\tcountry of birth: #{students[student_index][:country_of_birth]}".center(50)
+      puts "\theight: #{students[student_index][:height]} cm".center(50)
     end
     student_index += 1
   end
@@ -40,7 +40,7 @@ end
 
 # prints the total number of students
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  puts "Overall, we have #{students.count} great students".center(50)
 end
 
 students = input_students
