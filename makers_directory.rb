@@ -1,3 +1,4 @@
+require 'csv'
 @students = [] # an empty array accessible to all methods
 
 def add_to_students(name, cohort = :november)
@@ -75,22 +76,18 @@ def process(selection)
 end
 
 def save_students(filename = "students.csv")
-  File.open(filename, "w") do |file|
+  CSV.open(filename, "w") do |student_database|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      student_database << [student[:name], student[:cohort]]
     end
   end
   puts "Students successfully saved."
 end
 
 def load_students(filename = "students.csv")
-  File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort = line.chomp.split(',')
-      add_to_students(name, cohort.to_sym)
-    end
+  CSV.foreach(filename) do |line|
+    name, cohort = line
+    add_to_students(name, cohort.to_sym)
   end
   puts "Students succesfully loaded."
 end
