@@ -5,15 +5,19 @@ def add_to_students(name, cohort = :november)
   @students << {name: name, cohort: cohort}
 end
 
-def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
-  name = STDIN.gets.chomp
+def enter_student_names(name)
   while !name.empty? do
     add_to_students(name)
     puts "Now we have #{@students.count} students"
     name = STDIN.gets.chomp
   end
+end
+
+def input_students
+  puts "Please enter the names of the students"
+  puts "To finish, just hit return twice"
+  name = STDIN.gets.chomp
+  enter_student_names(name)
   puts "Students succesfully inputted."
 end
 
@@ -28,7 +32,7 @@ end
 
 def print_students_list
   @students.each do |student|
-    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+    puts "#{student[:name]} (#{student[:cohort].capitalize} cohort)"
   end
 end
 
