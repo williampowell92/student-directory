@@ -1,19 +1,19 @@
 require 'csv'
 @students = []
 
-def add_to_students(name, cohort = :november)
+def add_to_students(name, cohort = :"April 2018")
   @students << {name: name, cohort: cohort}
 end
 
-def show_student_count(students)
+def show_student_count
   puts "Now we have #{@students.count} students"
 end
 
-def enter_student_names(name)
+def enter_student_names
   name = STDIN.gets.chomp
   while !name.empty? do
     add_to_students(name)
-    show_student_count(students)
+    show_student_count
     name = STDIN.gets.chomp
   end
 end
@@ -21,7 +21,7 @@ end
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
-  enter_student_names(name)
+  enter_student_names
   puts "Students succesfully inputted."
 end
 
@@ -47,8 +47,8 @@ end
 def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to a file"
+  puts "4. Load the list from a file"
   puts "9. Exit"
 end
 
@@ -60,7 +60,7 @@ end
 
 def get_filename
   puts "Please enter a file name."
-  puts "Hit return to use the students.csv"
+  puts "Hit return to use students.csv"
   file_name = STDIN.gets.chomp
   file_name == "" ? "students.csv" : file_name
 end
@@ -92,12 +92,20 @@ def save_students(filename)
   puts "Students successfully saved."
 end
 
+def print_students_loaded(filename)
+  case @students.count
+    when 0 then puts "No students loaded."
+    when 1 then puts "Loaded 1 student from #{filename}."
+    else puts "Loaded #{@students.count} students from #{filename}."
+  end
+end
+
 def load_students(filename)
   CSV.foreach(filename) do |line|
     name, cohort = line
     add_to_students(name, cohort.to_sym)
   end
-  puts "Students succesfully loaded."
+  print_students_loaded(filename)
 end
 
 def try_load_students
@@ -105,7 +113,6 @@ def try_load_students
   return if filename.nil?
   if File.exist?(filename)
     load_students(filename)
-    puts "Loaded #{@students.count} from #{filename}."
   else
     puts "Sorry, #{filename} doesn't exist."
     exit
