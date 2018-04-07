@@ -50,6 +50,7 @@ def print_menu
   puts "3. Save the list to a file"
   puts "4. Load the list from a file"
   puts "5. Delete a student database"
+  puts "6. Delete the current students list"
   puts "9. Exit"
 end
 
@@ -66,6 +67,18 @@ def get_filename
   file_name == "" ? "students.csv" : file_name
 end
 
+def delete_student_database(filename)
+  File.open(filename, "w") do |file|
+    file.truncate(0)
+  end
+  puts "#{filename} deleted"
+end
+
+def delete_students
+  @students = []
+  puts "Current student list deleted."
+end
+
 def process(selection)
   case selection
     when "1"
@@ -77,7 +90,9 @@ def process(selection)
     when "4"
       load_students(get_filename)
     when "5"
-      delete_students(get_filename)
+      delete_student_database(get_filename)
+    when "6"
+      delete_students
     when "9"
       puts "Goodbye!"
       exit
@@ -93,12 +108,6 @@ def save_students(filename)
     end
   end
   puts "Students successfully saved."
-end
-
-def delete_students(filename)
-  File.open(filename, "w") do |file|
-    file.truncate(0)
-  end
 end
 
 def count_saved_students(filename)
