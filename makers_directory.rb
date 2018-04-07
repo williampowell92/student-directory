@@ -49,6 +49,13 @@ def show_students
   print_footer
 end
 
+def get_filename
+  puts "Please enter a file name."
+  puts "Hit return to use the default file"
+  file_name = STDIN.gets.chomp
+  file_name == "" ? "students.csv" : file_name
+end
+
 def process(selection)
   case selection
     when "1"
@@ -56,9 +63,9 @@ def process(selection)
     when "2"
       show_students
     when "3"
-      save_students
+      save_students(get_filename)
     when "4"
-      load_students
+      load_students(get_filename)
     when "9"
       puts "Goodbye!"
       exit
@@ -67,8 +74,8 @@ def process(selection)
   end
 end
 
-def save_students
-  file = File.open("students.csv", "w")
+def save_students(filename = "students.csv")
+  file = File.open(filename, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
