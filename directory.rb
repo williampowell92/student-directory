@@ -49,6 +49,7 @@ def print_menu
   puts "2. Show the students"
   puts "3. Save the list to a file"
   puts "4. Load the list from a file"
+  puts "5. Delete a student database"
   puts "9. Exit"
 end
 
@@ -75,6 +76,8 @@ def process(selection)
       save_students(get_filename)
     when "4"
       load_students(get_filename)
+    when "5"
+      delete_students(get_filename)
     when "9"
       puts "Goodbye!"
       exit
@@ -92,11 +95,24 @@ def save_students(filename)
   puts "Students successfully saved."
 end
 
+def delete_students(filename)
+  File.open(filename, "w") do |file|
+    file.truncate(0)
+  end
+end
+
+def count_saved_students(filename)
+  File.open(filename, "r") do |file|
+    return file.readlines.size
+  end
+end
+
 def print_students_loaded(filename)
-  case @students.count
+  database_size = count_saved_students(filename)
+  case database_size
     when 0 then puts "No students loaded."
     when 1 then puts "Loaded 1 student from #{filename}."
-    else puts "Loaded #{@students.count} students from #{filename}."
+    else puts "Loaded #{database_size} students from #{filename}."
   end
 end
 
