@@ -7,22 +7,21 @@ end
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
-  # get the first name
   name = STDIN.gets.chomp
-  # while the name is not empty, repeat this code
   while !name.empty? do
-    # add the student hash to the array
     add_to_students(name)
     puts "Now we have #{@students.count} students"
-    # get another name from the user
     name = STDIN.gets.chomp
   end
+  puts "Students succesfully inputted."
 end
 
 def print_header
   if @students.count > 0
     puts "The students of my cohort at Makers Academy"
     puts "-------------"
+  else
+    puts "There are no students."
   end
 end
 
@@ -41,7 +40,7 @@ def print_menu
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
   puts "4. Load the list from students.csv"
-  puts "9. Exit" # 9 because we'll be adding more items
+  puts "9. Exit"
 end
 
 def show_students
@@ -61,7 +60,8 @@ def process(selection)
     when "4"
       load_students
     when "9"
-      exit # this will cause the program to terminate
+      puts "Goodbye!"
+      exit
     else
       puts "I don't know what you meant, try again"
   end
@@ -75,6 +75,7 @@ def save_students
     file.puts csv_line
   end
   file.close
+  puts "Students successfully saved."
 end
 
 def load_students(filename = "students.csv")
@@ -84,6 +85,7 @@ def load_students(filename = "students.csv")
     add_to_students(name, cohort.to_sym)
   end
   file.close
+  puts "Students succesfully loaded."
 end
 
 def try_load_students
