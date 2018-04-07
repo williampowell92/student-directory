@@ -51,7 +51,7 @@ end
 
 def get_filename
   puts "Please enter a file name."
-  puts "Hit return to use the default file"
+  puts "Hit return to use the students.csv"
   file_name = STDIN.gets.chomp
   file_name == "" ? "students.csv" : file_name
 end
@@ -75,30 +75,30 @@ def process(selection)
 end
 
 def save_students(filename = "students.csv")
-  file = File.open(filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(filename, "w") do |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
   puts "Students successfully saved."
 end
 
 def load_students(filename = "students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(',')
-    add_to_students(name, cohort.to_sym)
+  File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort = line.chomp.split(',')
+      add_to_students(name, cohort.to_sym)
+    end
   end
-  file.close
   puts "Students succesfully loaded."
 end
 
 def try_load_students
   ARGV.first != nil ? filename = ARGV.first : filename = "students.csv"
   return if filename.nil?
-  if File.exists?(filename)
+  if File.exist?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} from #{filename}."
   else
