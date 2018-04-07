@@ -17,9 +17,11 @@ def input_students
   students
 end
 
-def print_header
-  puts "The students of my cohort at Makers Academy"
-  puts "-------------"
+def print_header(students)
+  if students.count > 0
+    puts "The students of my cohort at Makers Academy"
+    puts "-------------"
+  end
 end
 
 def print(students)
@@ -29,11 +31,11 @@ def print(students)
 end
 
 def print_footer(students)
-  puts "Overall, we have #{students.count} great students"
+  puts "Overall, we have #{students.count} great students" if students.count > 0
 end
 
 
 students = input_students
-print_header
+print_header(students)
 print(students)
 print_footer(students)
