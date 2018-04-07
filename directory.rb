@@ -1,14 +1,19 @@
 require 'csv'
-@students = [] # an empty array accessible to all methods
+@students = []
 
 def add_to_students(name, cohort = :november)
   @students << {name: name, cohort: cohort}
 end
 
+def show_student_count(students)
+  puts "Now we have #{@students.count} students"
+end
+
 def enter_student_names(name)
+  name = STDIN.gets.chomp
   while !name.empty? do
     add_to_students(name)
-    puts "Now we have #{@students.count} students"
+    show_student_count(students)
     name = STDIN.gets.chomp
   end
 end
@@ -16,7 +21,6 @@ end
 def input_students
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
-  name = STDIN.gets.chomp
   enter_student_names(name)
   puts "Students succesfully inputted."
 end
@@ -79,7 +83,7 @@ def process(selection)
   end
 end
 
-def save_students(filename = "students.csv")
+def save_students(filename)
   CSV.open(filename, "w") do |student_database|
     @students.each do |student|
       student_database << [student[:name], student[:cohort]]
@@ -88,7 +92,7 @@ def save_students(filename = "students.csv")
   puts "Students successfully saved."
 end
 
-def load_students(filename = "students.csv")
+def load_students(filename)
   CSV.foreach(filename) do |line|
     name, cohort = line
     add_to_students(name, cohort.to_sym)
