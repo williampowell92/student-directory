@@ -1,110 +1,115 @@
-# puts all student names into array
+require 'csv'
+@students = [] # an empty array accessible to all methods
+
+def add_to_students(name, cohort = :november)
+  @students << {name: name, cohort: cohort}
+end
+
 def input_students
-  cohorts = [
-  :january,
-  :february,
-  :march,
-  :april,
-  :may,
-  :june,
-  :july,
-  :august,
-  :september,
-  :october,
-  :november,
-  :december,
-  :unknown
-  ]
   puts "Please enter the names of the students"
   puts "To finish, just hit return twice"
-  # create an empty array
-  students = []
-  # get the first name
-  name = gets.gsub(/\s+\z/, "")
-  puts "Please enter #{name}'s cohort"
-  cohort = gets.chomp
-  # while the name is not empty, repeat this code
+  name = STDIN.gets.chomp
   while !name.empty? do
-    # add the students hash to the array
-    students << {name: name, cohort: cohort.to_sym, hobby: "world domination", country_of_birth: "hell", height: 183}
-
-    puts "Now we have #{students.count} students"
-    # get another name from the user
-    name = gets.chomp
-    unless name.empty?
-      while true do
-        puts "Please enter #{name}'s cohort"
-        cohort = gets.chomp
-
-        if cohort == ""
-          cohort = :unknown
-        end
-
-        if cohorts.include?(cohort.to_sym)
-          break
-        end
-      end
-    end
+    add_to_students(name)
+    puts "Now we have #{@students.count} students"
+    name = STDIN.gets.chomp
   end
-  # return the array of students
-  students
+  puts "Students succesfully inputted."
 end
 
-def group_by_cohort(students)
-  cohorts = [
-  :january,
-  :february,
-  :march,
-  :april,
-  :may,
-  :june,
-  :july,
-  :august,
-  :september,
-  :october,
-  :november,
-  :december,
-  :unknown
-  ]
-
-  sorted_students = students.sort do |first, second|
-    cohorts.index(first[:cohort]) <=> cohorts.index(second[:cohort])
-  end
-
-  sorted_students
-end
-
-# prints the school header
 def print_header
-  puts "The students of Villains Academy".center(50)
-  puts "--------------------------------".center(50)
-end
-
-# prints a list of students
-def print(students)
-  student_index = 0
-  while student_index < students.count do
-    if students[student_index][:name][0].downcase == "r" && students[student_index][:name].length < 12
-      puts "#{student_index + 1}. #{students[student_index][:name]} (#{students[student_index][:cohort].capitalize} cohort)".center(50)
-      puts "\thobby: #{students[student_index][:hobby]}".center(50)
-      puts "\tcountry of birth: #{students[student_index][:country_of_birth]}".center(50)
-      puts "\theight: #{students[student_index][:height]} cm".center(50)
-    end
-    student_index += 1
-  end
-end
-
-# prints the total number of students
-def print_footer(students)
-  if students.count == 1
-    puts "Overall, we have #{students.count} great student".center(50)
+  if @students.count > 0
+    puts "The students of my cohort at Makers Academy"
+    puts "-------------"
   else
-    puts "Overall, we have #{students.count} great students".center(50)
+    puts "There are no students."
   end
 end
 
-students = input_students
-grouped_students = group_by_cohort(students)
-print_header
-print(grouped_students)
-print_footer(students)
+def print_students_list
+  @students.each do |student|
+    puts "#{student[:name]} (#{student[:cohort]} cohort)"
+  end
+end
+
+def print_footer
+  puts "Overall, we have #{@students.count} great students" if @students.count > 0
+end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
+  puts "9. Exit"
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
+end
+
+def get_filename
+  puts "Please enter a file name."
+  puts "Hit return to use the students.csv"
+  file_name = STDIN.gets.chomp
+  file_name == "" ? "students.csv" : file_name
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+      show_students
+    when "3"
+      save_students(get_filename)
+    when "4"
+      load_students(get_filename)
+    when "9"
+      puts "Goodbye!"
+      exit
+    else
+      puts "I don't know what you meant, try again"
+  end
+end
+
+def save_students(filename = "students.csv")
+  CSV.open(filename, "w") do |student_database|
+    @students.each do |student|
+      student_database << [student[:name], student[:cohort]]
+    end
+  end
+  puts "Students successfully saved."
+end
+
+def load_students(filename = "students.csv")
+  CSV.foreach(filename) do |line|
+    name, cohort = line
+    add_to_students(name, cohort.to_sym)
+  end
+  puts "Students succesfully loaded."
+end
+
+def try_load_students
+  ARGV.first != nil ? filename = ARGV.first : filename = "students.csv"
+  return if filename.nil?
+  if File.exist?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} from #{filename}."
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
+end
+
+def interactive_menu
+  try_load_students
+  loop do
+    print_menu
+    process(STDIN.gets.chomp)
+  end
+end
+
+interactive_menu
